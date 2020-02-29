@@ -16,45 +16,45 @@ export class CreateEmployeeComponent implements OnInit {
   // Notice, each key in this object has the same name as the
   // corresponding form control
   formErrors = {
-    'fullName': '',
-    'email': '',
-    'confirmEmail': '',
-    'emailGroup': '',
-    'phone': '',
-    'skillName': '',
-    'experienceInYears': '',
-    'proficiency': ''
+    // 'fullName': '',
+    // 'email': '',
+    // 'confirmEmail': '',
+    // 'emailGroup': '',
+    // 'phone': '',
+    // 'skillName': '',
+    // 'experienceInYears': '',
+    // 'proficiency': ''
   };
 
   // This object contains all the validation messages for this form
   validationMessages = {
     'fullName': {
       'required': 'Full Name is required.',
-      'minlength': 'Full Name must be greater than 2 characters',
-      'maxlength': 'Full Name must be less than 10 characters.',
+      'minlength': 'Full Name must be greater than 2 characters.',
+      'maxlength': 'Full Name must be less than 10 characters.'
     },
     'email': {
       'required': 'Email is required.',
       'emailDomain': 'Email domian should be dell.com'
     },
     'confirmEmail': {
-      'required': 'Confirm Email is required.'
+      'required': 'Confirm Email is required.',
     },
     'emailGroup': {
-      'emailMismatch': 'Email and Confirm Email do not match.'
+      'emailMismatch': 'Email and Confirm Email do not match',
     },
     'phone': {
       'required': 'Phone is required.'
     },
-    'skillName': {
-      'required': 'Skill Name is required.',
-    },
-    'experienceInYears': {
-      'required': 'Experience is required.',
-    },
-    'proficiency': {
-      'required': 'Proficiency is required.',
-    },
+    // 'skillName': {
+    //   'required': 'Skill Name is required.',
+    // },
+    // 'experienceInYears': {
+    //   'required': 'Experience is required.',
+    // },
+    // 'proficiency': {
+    //   'required': 'Proficiency is required.',
+    // },
   };
 
 
@@ -141,6 +141,10 @@ export class CreateEmployeeComponent implements OnInit {
     (<FormArray>this.employeeForm.get('skills')).push(this.addSkillFormGroup());
   }
 
+  removeSkillButtonClick(skillGroupIndex: number): void {
+    (<FormArray>this.employeeForm.get('skills')).removeAt(skillGroupIndex);
+  }
+
   addSkillFormGroup(): FormGroup {
     return this.fb.group({
       skillName: ['', Validators.required],
@@ -181,16 +185,13 @@ export class CreateEmployeeComponent implements OnInit {
         this.logValidationErrors(abstractControl);
       }
 
-      // We need this additional check to get to the FormGroup
-      // in the FormArray and then recursively call this
-      // logValidationErrors() method to fix the broken validation
-      if (abstractControl instanceof FormArray) {
-        for (const control of abstractControl.controls) {
-          if (control instanceof FormGroup) {
-            this.logValidationErrors(control);
-          }
-        }
-      }
+      // if (abstractControl instanceof FormArray) {
+      //   for (const control of abstractControl.controls) {
+      //     if (control instanceof FormGroup) {
+      //       this.logValidationErrors(control);
+      //     }
+      //   }
+      // }
     });
   }
 
