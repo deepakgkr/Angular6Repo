@@ -6,6 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { EmployeeService } from './employee.service';
 import { IEmployee } from './IEmployee';
 import { ISkill } from './ISkill';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-employee',
@@ -15,6 +16,8 @@ import { ISkill } from './ISkill';
 export class CreateEmployeeComponent implements OnInit {
   // This FormGroup contains fullName and Email form controls
   employeeForm: FormGroup;
+  employee: IEmployee;
+  pageTitle: string;
 
   // This object will hold the messages to be displayed to the user
   // Notice, each key in this object has the same name as the
@@ -63,7 +66,8 @@ export class CreateEmployeeComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
     private route: ActivatedRoute,
-    private employeeService: EmployeeService) { }
+    private employeeService: EmployeeService,
+    private router: Router) { }
 
   // Initialise the FormGroup with the 2 FormControls we need.
   // ngOnInit ensures the FormGroup and it's form controls are
@@ -143,7 +147,18 @@ export class CreateEmployeeComponent implements OnInit {
     this.route.paramMap.subscribe(params => {
       const empId = +params.get('id');
       if (empId) {
+        this.pageTitle = 'Edit Employee';
         this.getEmployee(empId);
+      } else {
+        this.pageTitle = 'Create Employee';
+        this.employee = {
+          id: null,
+          fullName: '',
+          contactPreference: '',
+          email: '',
+          phone: null,
+          skills: []
+        };
       }
     });
   }
@@ -151,7 +166,12 @@ export class CreateEmployeeComponent implements OnInit {
   getEmployee(id: number) {
     this.employeeService.getEmployee(id)
       .subscribe(
-        (employee: IEmployee) => this.editEmployee(employee),
+        (employee: IEmployee) => {
+          // Store the employee object returned by the
+          // REST API in the employee property
+          this.employee = employee;
+          this.editEmployee(employee);
+        },
         (err: any) => console.log(err)
       );
   }
@@ -273,9 +293,31 @@ export class CreateEmployeeComponent implements OnInit {
   }
 
   onSubmit(): void {
-    console.log(this.employeeForm.value);
+    this.mapFormValuesToEmployeeModel();
+  
+    if (this.employee.id) {
+      this.employeeService.updateEmployee(this.employee).subscribe(
+        () => this.router.navigate(['list']),
+        (err: any) => console.log(err)
+      );
+    } else {
+      this.employeeService.addEmployee(this.employee).subscribe(
+        () => this.router.navigate(['list']),
+        (err: any) => console.log(err)
+      );
+    }
   }
+
+  mapFormValuesToEmployeeModel() {
+    this.employee.fullName = this.employeeForm.value.fullName;
+    this.employee.contactPreference = this.employeeForm.value.contactPreference;
+    this.employee.email = this.employeeForm.value.emailGroup.email;
+    this.employee.phone = this.employeeForm.value.phone;
+    this.employee.skills = this.employeeForm.value.skills;
+  }
+
 }
+
 
 function matchEmails(group: AbstractControl): { [key: string]: any } | null {
   const emailControl = group.get('email');
