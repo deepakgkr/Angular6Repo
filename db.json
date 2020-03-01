@@ -4,7 +4,7 @@
       "id": 1,
       "fullName": "Mark",
       "contactPreference": "email",
-      "email": "mark@email.com",
+      "email": "mark@dell.com",
       "phone": "5641238971",
       "skills": [
         {
@@ -49,6 +49,25 @@
           "skillName": "HTML",
           "experienceInYears": "4",
           "proficiency": "advanced"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "fullName": "Deepak k",
+      "contactPreference": "email",
+      "email": "deepdweak@dell.com",
+      "phone": "3242138971",
+      "skills": [
+        {
+          "skillName": "d",
+          "experienceInYears": "4",
+          "proficiency": "beginner"
+        },
+        {
+          "skillName": "LINQww",
+          "experienceInYears": "33",
+          "proficiency": "intermediate"
         }
       ]
     }
